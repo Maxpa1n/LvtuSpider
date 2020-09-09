@@ -73,6 +73,8 @@ class LvtuIndexSpider(object):
                 if page % 100 == 0:
                     self.save_to_json(all_index_data, self.first_title, second_tit, third_title, page)
                     all_index_data = []
+                if page == int(page_num):
+                    self.save_to_json(all_index_data, self.first_title, second_tit, third_title, page)
 
 
 if __name__ == '__main__':
