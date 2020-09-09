@@ -37,12 +37,12 @@ class LvtuIndexSpider(object):
         :return:
         '''
         print('----------{}_{}_{}_{}-保存-------'.format(first_title, second_title, third_title, page))
-        with open('data/{}_{}_{}_{}.json'.format(first_title, second_title, third_title, page), 'w',
+        with open('data/index/{}_{}_{}_{}.json'.format(first_title, second_title, third_title, page), 'w',
                   encoding='utf8') as f:
             json.dump(save_data, f, ensure_ascii=False)
 
     def request_url(self, url):
-        res = requests.get(url, headers=self.get_headers())
+        res = requests.get(url, headers=self.get_headers(), allow_redirects=False)
         if int(res.status_code) == 200:
             return res.text, pq(res.text)
         else:
@@ -56,16 +56,17 @@ class LvtuIndexSpider(object):
         return get_page_number(doc)
 
     def run(self):
-        for sub_tit_url in self.second_title_url_dic:
+        for i in range(self.second_title_url_dic):
+            sub_tit_url = self.second_title_url_dic[i]
             second_tit = sub_tit_url['second_title']
             base_url = sub_tit_url['url']
             _, doc = self.request_url(base_url)
             page_num = self.get_page_number(doc)
             all_index_data = []
             start_page = 1
-            print('----------{}-{}--正常爬-------'.format(self.first_title, second_tit))
+            print('----------{}-{}-{}-正常爬-------'.format(self.first_title, second_tit, str(i)))
             for page in tqdm(range(start_page, int(page_num) + 1)):
-                time.sleep(0.8)
+                time.sleep(0.5)
                 url = base_url + str(page) + '/'
                 _, doc = self.request_url(url)
                 third_title, index_data = self.pq_page(doc)
