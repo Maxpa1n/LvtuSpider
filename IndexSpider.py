@@ -56,7 +56,7 @@ class LvtuIndexSpider(object):
         return get_page_number(doc)
 
     def run(self):
-        for i in range(self.second_title_url_dic):
+        for i in range(len(self.second_title_url_dic)):
             sub_tit_url = self.second_title_url_dic[i]
             second_tit = sub_tit_url['second_title']
             base_url = sub_tit_url['url']
