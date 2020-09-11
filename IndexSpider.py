@@ -35,7 +35,7 @@ class LvtuIndexSpider(object):
                                         'data'[{'third_title':xxxx,'url':xxxxx}]}
         :param first_title: 大类
         :param second_title: 小类
-        :return:
+        :return: None
         '''
         print('----------{}_{}_{}_{}-保存-------'.format(first_title, second_title, third_title, page))
         with open('data/index/{}_{}_{}_{}.json'.format(first_title, second_title, third_title, page), 'w',
