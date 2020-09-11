@@ -38,6 +38,9 @@ def get_one_page_index(doc):
 
 
 def get_page_number(doc):
+    if len(doc('div.page-bar.tc.mt20 a '))<=2:
+        return 1
+
     num = doc('div.page-bar.tc.mt20 a')[-2].text
 
     return int(num)

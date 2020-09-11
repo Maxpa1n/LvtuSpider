@@ -1,3 +1,4 @@
+#coding=utf-8
 import json
 import random
 import time
@@ -34,7 +35,7 @@ class LvtuIndexSpider(object):
                                         'data'[{'third_title':xxxx,'url':xxxxx}]}
         :param first_title: 大类
         :param second_title: 小类
-        :return:
+        :return: None
         '''
         print('----------{}_{}_{}_{}-保存-------'.format(first_title, second_title, third_title, page))
         with open('data/index/{}_{}_{}_{}.json'.format(first_title, second_title, third_title, page), 'w',
@@ -46,8 +47,9 @@ class LvtuIndexSpider(object):
         if int(res.status_code) == 200:
             return res.text, pq(res.text)
         else:
+            time.sleep(5)
             print('状态码--{}--'.format(str(res.status_code)))
-            return ''
+            return 'FLAG',pq(res.text)
 
     def pq_page(self, doc):
         return get_one_page_index(doc)
@@ -56,21 +58,27 @@ class LvtuIndexSpider(object):
         return get_page_number(doc)
 
     def run(self):
-        for i in range(len(self.second_title_url_dic)):
+        for i in range(0,len(self.second_title_url_dic)):
             sub_tit_url = self.second_title_url_dic[i]
             second_tit = sub_tit_url['second_title']
             base_url = sub_tit_url['url']
-            _, doc = self.request_url(base_url)
+            text, doc = self.request_url(base_url)
+            if text=='FLAG':
+                continue
             page_num = self.get_page_number(doc)
             all_index_data = []
             start_page = 1
             print('-----------{}-{}-{}-正常爬----------'.format(self.first_title, second_tit, str(i)))
             for page in tqdm(range(start_page, int(page_num) + 1)):
-                time.sleep(0.5)
+                time.sleep(0.1)
                 url = base_url + str(page) + '/'
-                _, doc = self.request_url(url)
+                text, doc = self.request_url(url)
+                if text=='FLAG':
+                    continue
                 third_title, index_data = self.pq_page(doc)
+
                 all_index_data.extend(index_data)
+
                 if page % 100 == 0:
                     self.save_to_json(all_index_data, self.first_title, second_tit, third_title, page)
                     all_index_data = []
@@ -81,7 +89,7 @@ class LvtuIndexSpider(object):
 if __name__ == '__main__':
     with open('data/spider_map.json', 'r', encoding='utf8') as f:
         data = json.load(f)
-    for i in data:
+    for i in data[len(data)-4:]:
         first = list(i.keys())[0]
         sec = i[first]
         index_spider = LvtuIndexSpider(first, sec)
