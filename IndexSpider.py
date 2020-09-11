@@ -68,7 +68,7 @@ class LvtuIndexSpider(object):
             page_num = self.get_page_number(doc)
             all_index_data = []
             start_page = 1
-            print('-----------{}-{}-{}-正常爬----------'.format(self.first_title, second_tit, str(i)))
+            print('-----------{}-{}-{}-正常爬------------'.format(self.first_title, second_tit, str(i)))
             for page in tqdm(range(start_page, int(page_num) + 1)):
                 time.sleep(0.1)
                 url = base_url + str(page) + '/'
