@@ -39,3 +39,5 @@ class PageSpider(object):
             time.sleep(5)
             print('状态码--{}--'.format(str(res.status_code)))
             return 'FLAG',pq(res.text)
+if __name__ == '__main__':
+    pass
